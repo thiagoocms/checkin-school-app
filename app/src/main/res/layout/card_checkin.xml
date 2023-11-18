@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="6dp"
+        android:background="#03CF1515"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardElevation="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="Matematica - "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_shift"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Manhã"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/txt_name"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="Thiago Cavalcante Mendes da silva"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/txt_name"
+                app:layout_constraintTop_toBottomOf="@+id/txt_name" />
+
+            <TextView
+                android:id="@+id/txt_startDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
+                android:text="09/11/2023 10:30"
+                app:layout_constraintEnd_toStartOf="@id/txt_interval"
+                app:layout_constraintHorizontal_weight="4"
+                app:layout_constraintStart_toStartOf="@+id/txt_name"
+                app:layout_constraintTop_toBottomOf="@+id/txt_username" />
+
+            <TextView
+                android:id="@+id/txt_interval"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintHorizontal_weight="1"
+                android:drawableStart="@drawable/baseline_watch_later_24"
+                android:text=" 5hrs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/txt_startDate"
+                app:layout_constraintTop_toBottomOf="@+id/txt_username" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
