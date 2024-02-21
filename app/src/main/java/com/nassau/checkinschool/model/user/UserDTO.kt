@@ -9,5 +9,5 @@ data class UserDTO(
     var documentType: String? = null,
     var login: String? = null,
     var password: String? = null,
-    var profile: String? = null
+    var profile: UserProfileEnum? = null
 ) : Serializable {}

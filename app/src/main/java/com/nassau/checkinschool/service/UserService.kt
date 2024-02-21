@@ -16,6 +16,9 @@ interface UserService {
     @POST("api/v1/users/login")
     fun login(@Body userDTO: UserDTO): Call<UserDTO>
 
+    @POST("api/v1/users")
+    fun create(@Body userDTO: UserDTO): Call<UserDTO>
+
     @GET("api/v1/users/{id}/classrooms")
     fun listClassrooms(@Path("id") id:Int): Call<ArrayList<ClassRoomDTO>>
 

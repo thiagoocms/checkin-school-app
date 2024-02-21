@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nassau.checkinschool.databinding.ActivityLoginBinding
 import com.nassau.checkinschool.model.Message
+import com.nassau.checkinschool.model.user.UserDTO
 import com.nassau.checkinschool.util.ALoadingDialog
 import com.nassau.checkinschool.util.JsonParse
 import com.nassau.checkinschool.viewModel.LoginViewModel
@@ -24,6 +25,25 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         aLoadingDialog = ALoadingDialog(this@LoginActivity)
+        startViewModel()
+        initView()
+        setContentView(binding.root)
+    }
+
+    private fun initView() {
+        binding.txtRegister.setOnClickListener {
+            var intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            intent.putExtra("user", UserDTO(login = binding.edtLogin.text.toString(),
+                                                    password = binding.edtPassword.text.toString() ))
+            startActivity(intent)
+        }
+        binding.btnLogin.setOnClickListener {
+            aLoadingDialog.show()
+            viewModel.login(binding.edtLogin.text.toString(), binding.edtPassword.text.toString())
+        }
+    }
+
+    private fun startViewModel() {
         viewModel.startHome = {
             var intent = Intent(this@LoginActivity, HomeActivity::class.java)
             intent.putExtra("user", it)
@@ -42,10 +62,5 @@ class LoginActivity : AppCompatActivity() {
             }
             aLoadingDialog.cancel();
         }
-        binding.btnLogin.setOnClickListener {
-            aLoadingDialog.show()
-            viewModel.login(binding.edtLogin.text.toString(), binding.edtPassword.text.toString())
-        }
-        setContentView(binding.root)
     }
 }
