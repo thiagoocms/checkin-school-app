@@ -6,21 +6,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import com.nassau.checkinschool.databinding.ActivityHomeBinding
 import com.nassau.checkinschool.model.Message
 import com.nassau.checkinschool.model.classroom.ClassRoomDTO
 import com.nassau.checkinschool.model.user.UserDTO
+import com.nassau.checkinschool.model.user.UserProfileEnum
 import com.nassau.checkinschool.util.ALoadingDialog
 import com.nassau.checkinschool.util.JsonParse
 import com.nassau.checkinschool.viewModel.HomeViewModel
@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat
 class HomeActivity : AppCompatActivity() {
 
     private var list: ArrayList<ClassRoomDTO> = ArrayList()
-    private lateinit var adapter: Adapter
+    private lateinit var cardCheckinAdapter: CardCheckinAdapter
     private lateinit var aLoadingDialog: ALoadingDialog
     private var userDTO: UserDTO? = null
     private var setAdapter = true
@@ -105,11 +105,20 @@ class HomeActivity : AppCompatActivity() {
             // Inicie o scanner usando o lançador do resultado da atividade
             qrCodeScannerLauncher.launch(options)
         }
+        if (userDTO?.profile == UserProfileEnum.STUDENT) {
+            binding.btnTeacherHome.visibility = View.GONE
+        } else {
+            binding.btnTeacherHome.setOnClickListener {
+                var intent = Intent(this@HomeActivity, TeacherHomeActivity::class.java)
+                intent.putExtra("user", userDTO)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun setAdapter() {
-        adapter = Adapter(list)
-        binding.rvListCard.adapter = adapter
+        cardCheckinAdapter = CardCheckinAdapter(list)
+        binding.rvListCard.adapter = cardCheckinAdapter
 
         binding.rvListCard.layoutAnimation = LayoutAnimationController(
             AnimationUtils.loadAnimation(
@@ -126,7 +135,7 @@ class HomeActivity : AppCompatActivity() {
                 setAdapter()
                 setAdapter = false
             } else {
-                adapter.update(it)
+                cardCheckinAdapter.update(it)
             }
 
 

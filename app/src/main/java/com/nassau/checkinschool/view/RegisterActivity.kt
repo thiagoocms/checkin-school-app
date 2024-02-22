@@ -3,6 +3,7 @@ package com.nassau.checkinschool.view
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nassau.checkinschool.R
@@ -62,8 +63,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun startViewModel() {
         viewModel.startHome = {
-            var intent = Intent(this@RegisterActivity, HomeActivity::class.java)
+            val intent = Intent(this@RegisterActivity, HomeActivity::class.java)
             intent.putExtra("user", it)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            aLoadingDialog.dismiss()
             startActivity(intent)
             finish()
         }

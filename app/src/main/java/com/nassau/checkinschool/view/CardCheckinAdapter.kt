@@ -10,8 +10,8 @@ import org.joda.time.DateTime
 import org.joda.time.Hours
 import java.text.SimpleDateFormat
 
-class Adapter(private var data: ArrayList<ClassRoomDTO>) :
-    RecyclerView.Adapter<Adapter.ViewHolder>() {
+class CardCheckinAdapter(private var data: ArrayList<ClassRoomDTO>) :
+    RecyclerView.Adapter<CardCheckinAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = CardCheckinBinding.inflate(LayoutInflater.from(parent.context), parent, false)

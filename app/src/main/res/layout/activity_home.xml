@@ -7,6 +7,18 @@
     tools:context=".view.HomeActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_teacher_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:onClick="qrcode"
+        android:src="@drawable/baseline_badge_24"
+        android:tint="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/btn_checkin"
+        app:layout_constraintEnd_toEndOf="@id/btn_checkin" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_checkin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
