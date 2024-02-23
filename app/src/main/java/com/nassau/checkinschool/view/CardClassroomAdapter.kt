@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.desafio.listener.OnClickListener
 import com.nassau.checkinschool.databinding.CardClassroomBinding
 import com.nassau.checkinschool.model.classroom.ClassRoomDTO
 import org.joda.time.DateTime
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat
 class CardClassroomAdapter(private var data: ArrayList<ClassRoomDTO>) :
     RecyclerView.Adapter<CardClassroomAdapter.ViewHolder>() {
 
+    private var onClickListener: OnClickListener<ClassRoomDTO>? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = CardClassroomBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -41,6 +43,9 @@ class CardClassroomAdapter(private var data: ArrayList<ClassRoomDTO>) :
                 DateTime(item.startDate),
                 DateTime(item.endDate)
             ).hours.toString() + " hrs"
+            binding.card.setOnClickListener {
+                onClickListener!!.onClick(item, adapterPosition)
+            }
         }
     }
 
@@ -53,7 +58,12 @@ class CardClassroomAdapter(private var data: ArrayList<ClassRoomDTO>) :
     fun update(items: ArrayList<ClassRoomDTO>) {
         val sizeCurrent = data.size
         data = items
+        notifyDataSetChanged()
         notifyItemRangeInserted(sizeCurrent, items.size)
+    }
+
+    fun setOnItemClickListener(onClickListener: OnClickListener<ClassRoomDTO>) {
+        this.onClickListener = onClickListener
     }
 
 }

@@ -1,10 +1,13 @@
 package com.nassau.checkinschool.view
 
+import android.app.ActivityOptions
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.ViewModelProvider
+import com.example.desafio.listener.OnClickListener
 import com.nassau.checkinschool.databinding.ActivityTeacherHomeBinding
 import com.nassau.checkinschool.model.classroom.ClassRoomDTO
 import com.nassau.checkinschool.model.user.UserDTO
@@ -24,36 +27,51 @@ class TeacherHomeActivity : AppCompatActivity() {
         ViewModelProvider(this)[TeacherHomeViewModel::class.java]
     }
     private var setAdapter = true
+
     private var userDTO: UserDTO? = null
+
+    private lateinit var aLoadingDialog: ALoadingDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
         observer()
         setContentView(binding.root)
     }
-    private fun initView() {
-        userDTO = intent.getSerializableExtra("user") as UserDTO
+
+    override fun onResume() {
+        super.onResume()
         userDTO?.id?.let {
+            aLoadingDialog.show()
             viewModel.loadItems(it)
-//            mock()
         }
+    }
+    private fun initView() {
+        aLoadingDialog = ALoadingDialog(this@TeacherHomeActivity)
+        userDTO = intent.getSerializableExtra("user") as UserDTO
         binding.imgBack.setOnClickListener {
             finish()
         }
         val df = SimpleDateFormat("dd LLLL yyyy")
         binding.txtDate.text = df.format(DateTime.now().millis).toString()
+        binding.btnCreate.setOnClickListener{
+            var intent = Intent(this@TeacherHomeActivity, ClassroomFormActivity::class.java)
+            intent.putExtra("user", userDTO)
+            startActivity(intent)
+        }
     }
 
     private fun setAdapter() {
         cardClassroomAdapter = CardClassroomAdapter(list)
+        cardClassroomAdapter.setOnItemClickListener(object : OnClickListener<ClassRoomDTO> {
+            override fun onClick(value: ClassRoomDTO, position: Int) {
+                var intent = Intent(this@TeacherHomeActivity, ClassroomFormActivity::class.java)
+                intent.putExtra("classroom", value)
+                intent.putExtra("user", userDTO)
+                startActivity(intent)
+            }
+        })
         binding.rvListCard.adapter = cardClassroomAdapter
-
-        binding.rvListCard.layoutAnimation = LayoutAnimationController(
-            AnimationUtils.loadAnimation(
-                this@TeacherHomeActivity,
-                com.google.android.material.R.anim.abc_fade_in
-            )
-        )
     }
 
     private fun observer() {
@@ -62,11 +80,16 @@ class TeacherHomeActivity : AppCompatActivity() {
             if (setAdapter) {
                 setAdapter()
                 setAdapter = false
+                binding.rvListCard.layoutAnimation = LayoutAnimationController(
+                    AnimationUtils.loadAnimation(
+                        this@TeacherHomeActivity,
+                        com.google.android.material.R.anim.abc_fade_in
+                    )
+                )
             } else {
-                cardClassroomAdapter.update(it)
+                cardClassroomAdapter.update(list)
             }
-
-
+            aLoadingDialog.dismiss()
         }
     }
     private fun mock() {

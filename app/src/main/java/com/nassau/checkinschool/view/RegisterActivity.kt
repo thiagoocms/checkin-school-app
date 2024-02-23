@@ -43,6 +43,7 @@ class RegisterActivity : AppCompatActivity() {
         binding.edtPassword.setText(userDTO?.password)
         binding.rdGroupProfile.check(binding.rdBtnStudent.id)
         binding.btnRegister.setOnClickListener {
+            aLoadingDialog.show()
             val user = UserDTO(
                 name = binding.edtName.text.toString(),
                 login = binding.edtLogin.text.toString(),
@@ -56,7 +57,6 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
             )
-            aLoadingDialog.show()
             viewModel.create(user)
         }
     }

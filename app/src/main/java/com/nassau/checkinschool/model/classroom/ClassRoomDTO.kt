@@ -10,5 +10,6 @@ data class ClassRoomDTO(
     var startDate: Long? = null,
     var endDate: Long? = null,
     var period: String? = null,
-    var shift: String? = null
+    var shift: String? = null,
+    var qrCode: String? = null
 ) : Serializable

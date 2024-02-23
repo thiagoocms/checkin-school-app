@@ -61,12 +61,17 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        userDTO?.id?.let {
+            aLoadingDialog.show()
+            viewModel.loadItems(it)
+        }
+    }
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun initView() {
         userDTO = intent.getSerializableExtra("user") as UserDTO
-        userDTO?.id?.let { viewModel.loadItems(it) }
         viewModel.startCheck = {
-            viewModel.loadItems(userDTO?.id!!)
             aLoadingDialog.cancel()
             startActivity(Intent(this@HomeActivity, CheckActivity::class.java))
         }
@@ -137,8 +142,7 @@ class HomeActivity : AppCompatActivity() {
             } else {
                 cardCheckinAdapter.update(it)
             }
-
-
+            aLoadingDialog.cancel()
         }
     }
 
