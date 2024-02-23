@@ -19,6 +19,8 @@ class ClassroomFormViewModel : ViewModel() {
     var finish: () -> Unit = {}
     var error: (error: String?) -> Unit = {}
     var updateClassRoom: (classroom: ClassRoomDTO) -> Unit = {}
+    var updateQrCode: (base64: String) -> Unit = {}
+
     private var list = MutableLiveData<ArrayList<ClassRoomDTO>>()
     private val classRoomService by lazy {
         RetrofitConfig.instance.create(ClassRoomService::class.java)
@@ -31,6 +33,22 @@ class ClassroomFormViewModel : ViewModel() {
             update(id, classRoomDTO)
         }
 
+    }
+
+    fun generateQrCode(id: Int) {
+        val call = classRoomService.generate(id)
+        call.enqueue(object  : Callback<ClassRoomDTO>{
+            override fun onResponse(call: Call<ClassRoomDTO>, response: Response<ClassRoomDTO>) {
+                when(response.code()) {
+                    200 -> updateQrCode(response.body()!!.qrCode!!)
+                    else -> error(response.errorBody()?.string())
+                }
+            }
+
+            override fun onFailure(call: Call<ClassRoomDTO>, t: Throwable) {
+
+            }
+        })
     }
 
     private fun create(classRoomDTO: ClassRoomDTO) {

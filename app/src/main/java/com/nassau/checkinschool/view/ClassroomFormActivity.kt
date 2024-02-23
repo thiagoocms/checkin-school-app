@@ -2,25 +2,37 @@ package com.nassau.checkinschool.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Base64
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.nassau.checkinschool.R
 import com.nassau.checkinschool.databinding.ActivityClassroomFormBinding
+import com.nassau.checkinschool.databinding.QrCodeLayoutBinding
 import com.nassau.checkinschool.model.Message
 import com.nassau.checkinschool.model.classroom.ClassRoomDTO
 import com.nassau.checkinschool.model.user.UserDTO
 import com.nassau.checkinschool.util.ALoadingDialog
 import com.nassau.checkinschool.util.JsonParse
 import com.nassau.checkinschool.viewModel.ClassroomFormViewModel
+import kotlinx.coroutines.CoroutineStart
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 class ClassroomFormActivity : AppCompatActivity() {
@@ -43,6 +55,7 @@ class ClassroomFormActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun initView() {
 
@@ -53,7 +66,31 @@ class ClassroomFormActivity : AppCompatActivity() {
         }
         userDTO = intent.getSerializableExtra("user") as UserDTO
         var classroom = intent.getSerializableExtra("classroom") as ClassRoomDTO?
-        classroom?.let {
+        classroom?.let { it ->
+            it.qrCode.let { value ->
+                binding.imgViewQrCode.setOnClickListener {
+                    val decodedBytes: ByteArray = Base64.decode(classRoomDTO.qrCode,
+                        Base64.DEFAULT
+                    )
+                    val view = QrCodeLayoutBinding.inflate(LayoutInflater.from(this@ClassroomFormActivity))
+                    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                    if (bitmap != null) {
+                        view.imgQrCode.setImageBitmap(bitmap)
+                    }
+                    val dialog = Dialog(this@ClassroomFormActivity)
+                    dialog.setContentView(view.root)
+                    dialog.show()
+                }
+                if (value != null) {
+                    binding.imgViewQrCode.visibility = android.view.View.VISIBLE
+                } else {
+                        binding.imgCreateQrCode.visibility = android.view.View.VISIBLE
+                        binding.imgCreateQrCode.setOnClickListener { view ->
+                            aLoadingDialog.show()
+                            viewModel.generateQrCode(it.id!!)
+                        }
+                    }
+            }
             val df = SimpleDateFormat("dd/MM/yyyy")
             val endDate = DateTime(it.endDate)
             val startDate = DateTime(it.startDate)
@@ -131,6 +168,12 @@ class ClassroomFormActivity : AppCompatActivity() {
                 Snackbar.LENGTH_LONG
             )
             snackBar.show()
+        }
+        viewModel.updateQrCode = {
+            classRoomDTO.qrCode = it
+            binding.imgCreateQrCode.visibility = android.view.View.GONE
+            binding.imgViewQrCode.visibility = android.view.View.VISIBLE
+            aLoadingDialog.dismiss()
         }
     }
 

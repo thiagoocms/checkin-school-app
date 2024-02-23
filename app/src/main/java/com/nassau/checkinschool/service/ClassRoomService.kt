@@ -25,7 +25,7 @@ interface ClassRoomService {
     @GET("api/v1/classrooms/{id}")
     fun byId(@Path("id") id: Int): Call<ClassRoomDTO>
 
-    @GET("api/v1/classrooms/{id}/generate")
+    @PUT("api/v1/classrooms/{id}/generate")
     fun generate(@Path("id") id: Int): Call<ClassRoomDTO>
 
     @GET("api/v1/classrooms/{id}/check")
